@@ -42,6 +42,8 @@ def setup_covid_bi():
     except:
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
+    
+    print(covid_dash_link)
     driver.get(covid_dash_link)
 
     return driver
