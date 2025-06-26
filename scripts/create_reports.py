@@ -12,8 +12,6 @@ from PIL import Image
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
 # Dates for report naming
 curr_date = datetime.datetime.now()
 date_formatted = curr_date.strftime('%m.%d.%Y')
@@ -161,6 +159,8 @@ def create_all_reports() -> None:
     """
     Creates and saves all daily reports relating to COVID-19
     """
+
+    load_dotenv()
 
     user = os.getenv("METRO_EMAIL")
     driver = powerbi_login(user) 
