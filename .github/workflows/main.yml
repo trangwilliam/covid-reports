@@ -3,7 +3,7 @@ name: Upload weekend report
 on: [push]
 
 jobs:
-  create-envfile:
+  run-script:
     runs-on: ubuntu-latest
     steps:
     - name: Make envfile
@@ -18,10 +18,7 @@ jobs:
         envkey_DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
         envkey_UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
         envkey_WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
-
-  run-script:
-    runs-on: ubuntu-latest
-    steps:
+        
     - name: Checkout Repository
       uses: actions/checkout@v4
 
