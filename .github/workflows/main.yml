@@ -18,7 +18,28 @@ jobs:
         envkey_DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
         envkey_UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
         envkey_WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
-        
+
+    - name: Debug Environment Variables
+      env:
+        METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
+        METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
+        COVID_DASH_LINK: ${{ secrets.COVID_DASH_LINK }}
+        SHAREPOINT_URL: ${{ secrets.SHAREPOINT_URL }}
+        REPORT_SITE_NAME: ${{ secrets.REPORT_SITE_NAME }}
+        REPORT_DOC_LIBRARY: ${{ secrets.REPORT_DOC_LIBRARY }}
+        DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
+        UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
+        WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
+      run: |
+        echo "COVID_DASH_LINK is: '$COVID_DASH_LINK'"
+        echo "COVID_DASH_LINK length: ${#COVID_DASH_LINK}"
+        ls -la  # Check if .env file exists
+        if [ -f .env ]; then
+          echo ".env file contents:"
+          cat .env
+        else
+          echo ".env file does not exist"
+        fi
     - name: Checkout Repository
       uses: actions/checkout@v4
 
