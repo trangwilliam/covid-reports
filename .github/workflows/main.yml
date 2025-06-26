@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -32,10 +32,12 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        python -m venv .venv
+        source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        source .venv/bin/activate
 
     - name: Run Script
       run: |
+        source .venv/bin/activate
         python scripts/upload_weekend_report.py
