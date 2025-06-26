@@ -160,7 +160,7 @@ def create_all_reports() -> None:
     Creates and saves all daily reports relating to COVID-19
     """
 
-    load_dotenv()
+    load_dotenv('.env')
 
     user = os.getenv("METRO_EMAIL")
     driver = powerbi_login(user) 
