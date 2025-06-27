@@ -41,8 +41,6 @@ def setup_covid_bi():
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
 
-    print(covid_dash_link)
-    print(type(covid_dash_link))
     driver.get(covid_dash_link)
 
     return driver
@@ -111,11 +109,11 @@ def screenshot_bi(driver) -> list:
     
     # Wait for the report to fullscreen
     time.sleep(5)
+    img_filepaths = ['screenshots/' + date_short + '_0' + str(i) + '.png' for i in range(1, 4)]
 
     # Take screenshots of the first 3 pages of the dashboard
     try:
         next_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="fullscreen-navigate-next-btn"]')))
-        img_filepaths = ['screenshots/' + date_short + '_0' + str(i) + '.png' for i in range(1, 4)]
         driver.save_screenshot(img_filepaths[0])
 
         next_btn.click()
