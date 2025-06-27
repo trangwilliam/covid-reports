@@ -26,7 +26,7 @@ def setup_covid_bi():
     # Set options for WebDriver
     scale_factor = 0.2
     options = Options()
-    options.add_argument('--headless=new')
+    #options.add_argument('--headless=new')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument(f"--force-device-scale-factor={scale_factor}")
@@ -95,7 +95,28 @@ def screenshot_bi(driver) -> list:
     # Get the webdriver and create the output directory
     wait = WebDriverWait(driver, 20)
     output_dir = 'screenshots'
-    os.makedirs(output_dir, exist_ok=True)
+    # os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        os.makedirs(output_dir, exist_ok=True)
+        # Test write permissions
+        test_file = os.path.join(output_dir, 'test_write.txt')
+        with open(test_file, 'w') as f:
+            f.write('test')
+        os.remove(test_file)
+        print(f"✓ Directory created and writable: {os.path.abspath(output_dir)}")
+    except Exception as e:
+        print(f"✗ Directory creation/write test failed: {e}")
+        # Fallback to current directory
+        output_dir = '.'
+        print(f"Using current directory: {os.path.abspath(output_dir)}")
+
+    try:
+        current_url = driver.current_url
+        print(f"Driver status OK. Current URL: {current_url}")
+    except Exception as e:
+        print(f"✗ Driver appears to be dead: {e}")
+        return img_filepaths
 
     # Open the dashboard in fullscreen
     try:
