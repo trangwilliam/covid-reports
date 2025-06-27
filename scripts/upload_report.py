@@ -15,7 +15,7 @@ def upload_report(site: str, localpath: str, remotepath: str) -> None:
         remotepath (string): Location to upload file to
     """
 
-    load_dotenv('.env')
+    # load_dotenv('.env')
 
     # Get user variables
     username = os.getenv('METRO_EMAIL')

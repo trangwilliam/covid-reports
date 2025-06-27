@@ -17,7 +17,7 @@ def delete_reports() -> None:
         shutil.rmtree('screenshots', ignore_errors=True)
 
 if __name__ == '__main__':
-    load_dotenv('.env')
+    # load_dotenv('.env')
 
     # Get current date
     day = datetime.today()
