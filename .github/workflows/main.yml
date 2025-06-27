@@ -6,20 +6,7 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-        envkey_METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
-        envkey_METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
-        envkey_COVID_DASH_LINK: ${{ secrets.COVID_DASH_LINK }}
-        envkey_SHAREPOINT_URL: ${{ secrets.SHAREPOINT_URL }}
-        envkey_REPORT_SITE_NAME: ${{ secrets.REPORT_SITE_NAME }}
-        envkey_REPORT_DOC_LIBRARY: ${{ secrets.REPORT_DOC_LIBRARY }}
-        envkey_DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
-        envkey_UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
-        envkey_WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
-
-    - name: Debug Environment Variables
+    - name: Set environment variables
       env:
         METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
         METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
@@ -30,16 +17,8 @@ jobs:
         DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
         UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
         WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
-      run: |
-        echo "COVID_DASH_LINK is: '$COVID_DASH_LINK'"
-        echo "COVID_DASH_LINK length: ${#COVID_DASH_LINK}"
-        ls -la  # Check if .env file exists
-        if [ -f .env ]; then
-          echo ".env file contents:"
-          cat .env
-        else
-          echo ".env file does not exist"
-        fi
+      run: echo "Environment variables set"
+
     - name: Checkout Repository
       uses: actions/checkout@v4
 
