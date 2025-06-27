@@ -137,7 +137,7 @@ def save_reports(img_filepaths: list) -> None:
         img_filepaths (list): List of filepaths for COVID dashboard screenshots
     """
 
-    print(os.listdir('.'))
+    print(os.listdir('screenshots'))
 
     # Declare the output filepaths
     output_dir = 'reports'
