@@ -75,11 +75,10 @@ def powerbi_login(user: str):
         email_input.clear()
         email_input.send_keys(user)
 
-        sleep(10)
         next_btn = wait.until(EC.presence_of_element_located((By.ID, 'idSIButton9')))
         next_btn.click()
     except:
-        teardown(driver)
+        print('login error')
     
     return driver
 
