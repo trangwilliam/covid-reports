@@ -67,7 +67,7 @@ def powerbi_login(user: str):
 
     # Create the webdriver
     driver = setup_covid_bi()
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Open the dashboard and log in with credentials
     try:
@@ -75,6 +75,7 @@ def powerbi_login(user: str):
         email_input.clear()
         email_input.send_keys(user)
 
+        sleep(10)
         next_btn = wait.until(EC.presence_of_element_located((By.ID, 'idSIButton9')))
         next_btn.click()
     except:
@@ -95,7 +96,7 @@ def screenshot_bi(driver) -> list:
     # Get the webdriver and create the output directory
     wait = WebDriverWait(driver, 20)
     output_dir = 'screenshots'
-    # os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     try:
         os.makedirs(output_dir, exist_ok=True)
