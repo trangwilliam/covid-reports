@@ -5,6 +5,17 @@ on: [push]
 jobs:
   run-script:
     runs-on: ubuntu-latest
+    env:
+      METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
+      METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
+      COVID_DASH_LINK: ${{ secrets.COVID_DASH_LINK }}
+      SHAREPOINT_URL: ${{ secrets.SHAREPOINT_URL }}
+      REPORT_SITE_NAME: ${{ secrets.REPORT_SITE_NAME }}
+      REPORT_DOC_LIBRARY: ${{ secrets.REPORT_DOC_LIBRARY }}
+      DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
+      UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
+      WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
+    
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
