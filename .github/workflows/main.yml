@@ -6,6 +6,9 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
     - name: Set environment variables
       env:
         METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
@@ -18,10 +21,7 @@ jobs:
         UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
         WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
       run: echo "Environment variables set"
-
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
+      
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
