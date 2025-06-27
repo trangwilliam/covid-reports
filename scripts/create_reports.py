@@ -117,7 +117,6 @@ def screenshot_bi(driver) -> list:
         print(f"Driver status OK. Current URL: {current_url}")
     except Exception as e:
         print(f"✗ Driver appears to be dead: {e}")
-        return img_filepaths
 
     # Open the dashboard in fullscreen
     try:
