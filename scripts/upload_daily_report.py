@@ -4,7 +4,6 @@ from datetime import datetime
 
 from create_reports import create_all_reports
 from upload_report import upload_report
-from dotenv import load_dotenv
 
 def delete_reports() -> None:
     """
@@ -17,8 +16,6 @@ def delete_reports() -> None:
         shutil.rmtree('screenshots', ignore_errors=True)
 
 if __name__ == '__main__':
-    # load_dotenv('.env')
-
     # Get current date
     day = datetime.today()
     day_formatted = day.strftime('%m.%d.%Y')

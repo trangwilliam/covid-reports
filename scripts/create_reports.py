@@ -9,8 +9,6 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 from PIL import Image
-from dotenv import load_dotenv
-
 
 # Dates for report naming
 curr_date = datetime.datetime.now()
@@ -42,10 +40,9 @@ def setup_covid_bi():
     except:
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
-    
-    for key, value in os.environ.items():
-            print(f"  {key}: {repr(value)}")
 
+    print(covid_dash_link)
+    print(type(covid_dash_link))
     driver.get(covid_dash_link)
 
     return driver
