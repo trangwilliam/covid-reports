@@ -43,7 +43,9 @@ def setup_covid_bi():
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
     
-    print(covid_dash_link)
+    for key, value in os.environ.items():
+            print(f"  {key}: {repr(value)}")
+
     driver.get(covid_dash_link)
 
     return driver
@@ -161,8 +163,6 @@ def create_all_reports() -> None:
     """
     Creates and saves all daily reports relating to COVID-19
     """
-
-    # print(load_dotenv('.env'))
 
     user = os.getenv("METRO_EMAIL")
     driver = powerbi_login(user) 
