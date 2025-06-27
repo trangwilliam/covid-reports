@@ -137,6 +137,8 @@ def save_reports(img_filepaths: list) -> None:
         img_filepaths (list): List of filepaths for COVID dashboard screenshots
     """
 
+    print(os.listdir('.'))
+
     # Declare the output filepaths
     output_dir = 'reports'
     union_data_report_fp = os.path.join(output_dir, f'Union Data Report ({date_formatted}).pdf')
