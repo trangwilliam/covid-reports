@@ -119,7 +119,6 @@ def screenshot_bi(driver) -> list:
         print(f"✗ Driver appears to be dead: {e}")
 
     try:
-        wait = WebDriverWait(driver, wait_time)
         fullscreen_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="open-in-full-screen-btn"]')))
         print("✓ Fullscreen button found")
         return True
