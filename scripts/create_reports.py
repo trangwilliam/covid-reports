@@ -82,6 +82,9 @@ def powerbi_login(user: str):
     except:
         print('login error')
     
+    print('post log in')
+    print(driver.find_element(By.XPATH, "/html/body").text)
+    
     return driver
 
 def screenshot_bi(driver) -> list:
