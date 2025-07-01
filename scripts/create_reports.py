@@ -123,8 +123,7 @@ def screenshot_bi(driver) -> list:
         print("✓ Fullscreen button found")
     except TimeoutException:
         print("✗ Fullscreen button not found within timeout period")
-        page = driver.page_source.encode('utf-8')
-        print(page)
+        print(driver.find_element(By.XPATH, "/html/body").text)
     except Exception as e:
         print(f"✗ Error checking for fullscreen button: {e}")
 
