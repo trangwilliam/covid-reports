@@ -43,6 +43,7 @@ def setup_covid_bi():
         driver = webdriver.Chrome(service=service, options=options)
 
     driver.get(covid_dash_link)
+    print(driver.find_element(By.XPATH, "/html/body").text)
 
     return driver
 
@@ -123,7 +124,6 @@ def screenshot_bi(driver) -> list:
         print("✓ Fullscreen button found")
     except TimeoutException:
         print("✗ Fullscreen button not found within timeout period")
-        print(driver.find_element(By.XPATH, "/html/body").text)
     except Exception as e:
         print(f"✗ Error checking for fullscreen button: {e}")
 
