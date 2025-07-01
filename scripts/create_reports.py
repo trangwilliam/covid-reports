@@ -121,13 +121,12 @@ def screenshot_bi(driver) -> list:
     try:
         fullscreen_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="open-in-full-screen-btn"]')))
         print("✓ Fullscreen button found")
-        return True
     except TimeoutException:
         print("✗ Fullscreen button not found within timeout period")
-        return False
+        page = driver.page_source.encode('utf-8')
+        print(page)
     except Exception as e:
         print(f"✗ Error checking for fullscreen button: {e}")
-        return False
 
     # Open the dashboard in fullscreen
     try:
