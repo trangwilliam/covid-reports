@@ -1,4 +1,6 @@
-import os, datetime, time
+import os
+import datetime
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -32,7 +34,7 @@ def setup_covid_bi():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument(f"--force-device-scale-factor={scale_factor}")
     options.add_argument('--log-level=1')
-    
+
     # Additional options for GitHub Actions/CI environment
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-extensions')
@@ -43,6 +45,13 @@ def setup_covid_bi():
     options.add_argument('--disable-features=VizDisplayCompositor')
     options.add_argument('--window-size=1920,1080')
     options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+
+    # Authentication options for Windows Integrated Auth
+    options.add_argument('--auth-server-whitelist="*"')
+    options.add_argument('--auth-negotiate-delegate-whitelist="*"')
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
 
     # Create webdriver
     covid_dash_link = os.getenv("COVID_DASH_LINK")

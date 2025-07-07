@@ -1,0 +1,66 @@
+name: COVID Reports Automation
+
+on:
+  schedule:
+    # Run daily at 8 AM UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  create-reports:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Chrome
+      run: |
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+        apt-get update
+        apt-get install -y google-chrome-stable
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Test environment
+      run: |
+        python scripts/test_environment.py
+      env:
+        COVID_DASH_LINK: ${{ secrets.COVID_DASH_LINK }}
+        METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
+        METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
+        REPORT_SITE_NAME: ${{ secrets.REPORT_SITE_NAME }}
+        DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
+        UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
+        WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
+        SHAREPOINT_URL: ${{ secrets.SHAREPOINT_URL }}
+        
+    - name: Create and upload daily report
+      run: |
+        python scripts/upload_daily_report.py
+      env:
+        COVID_DASH_LINK: ${{ secrets.COVID_DASH_LINK }}
+        METRO_EMAIL: ${{ secrets.METRO_EMAIL }}
+        METRO_PASSWORD: ${{ secrets.METRO_PASSWORD }}
+        REPORT_SITE_NAME: ${{ secrets.REPORT_SITE_NAME }}
+        DAILY_REPORT_EXT: ${{ secrets.DAILY_REPORT_EXT }}
+        UNION_REPORT_EXT: ${{ secrets.UNION_REPORT_EXT }}
+        WEEKEND_REPORT_EXT: ${{ secrets.WEEKEND_REPORT_EXT }}
+        SHAREPOINT_URL: ${{ secrets.SHAREPOINT_URL }}
+        
+    - name: Upload artifacts (for debugging)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: screenshots
+        path: screenshots/
+        retention-days: 7 
