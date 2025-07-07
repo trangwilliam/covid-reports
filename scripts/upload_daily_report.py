@@ -33,7 +33,7 @@ if __name__ == '__main__':
     create_all_reports()
 
     # Upload reports to SharePoint
-    upload_report(site_path, localpath, remotepath)
+    upload_report(site_path, localpath, remotepath) # type: ignore 
 
     # Delete local directories of reports
     delete_reports()

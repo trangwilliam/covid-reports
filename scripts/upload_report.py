@@ -21,7 +21,7 @@ def upload_report(site: str, localpath: str, remotepath: str) -> None:
     
     # Creates an authentication token for SharePoint site
     ctx_auth = AuthenticationContext(site_url)
-    ctx_auth.acquire_token_for_user(username, password)
+    ctx_auth.acquire_token_for_user(username, password)  # type: ignore
 
     # Log in to SharePoint site
     ctx = ClientContext(site_url, ctx_auth)

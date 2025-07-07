@@ -32,9 +32,21 @@ def setup_covid_bi():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument(f"--force-device-scale-factor={scale_factor}")
     options.add_argument('--log-level=1')
+    
+    # Additional options for GitHub Actions/CI environment
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-plugins')
+    options.add_argument('--disable-images')
+    options.add_argument('--disable-web-security')
+    options.add_argument('--allow-running-insecure-content')
+    options.add_argument('--disable-features=VizDisplayCompositor')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
 
     # Create webdriver
     covid_dash_link = os.getenv("COVID_DASH_LINK")
+    
     try:
         service = Service()
         driver = webdriver.Chrome(service=service, options=options)
@@ -42,7 +54,8 @@ def setup_covid_bi():
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
 
-    driver.get(covid_dash_link)
+    driver.get(covid_dash_link) # type: ignore
+    print(f"Navigated to: {driver.current_url}")
     print(driver.find_element(By.XPATH, "/html/body").text)
 
     return driver
@@ -64,25 +77,61 @@ def powerbi_login(user: str):
     Args:
         user (String): Username of login account
     Returns:
-        driver (Selenium.WebDriver): WebDriver for COVID PowerBI Dashboard, logged in 
+        driver (Selenium.WebDriver): WebDriver for COVID Power BI Dashboard, logged in 
     """
 
     # Create the webdriver
     driver = setup_covid_bi()
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 30)  # Increased timeout for CI environment
 
     # Open the dashboard and log in with credentials
     try:
+        print("Waiting for login form...")
         email_input = wait.until(EC.presence_of_element_located((By.NAME, 'loginfmt')))
         email_input.clear()
         email_input.send_keys(user)
+        print(f"Entered email: {user}")
 
-        next_btn = wait.until(EC.presence_of_element_located((By.ID, 'idSIButton9')))
+        next_btn = wait.until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         next_btn.click()
-    except:
-        print('login error')
+        print("Clicked next button")
+        
+        # Wait for password field to appear
+        password_input = wait.until(EC.presence_of_element_located((By.NAME, 'passwd')))
+        password = os.getenv("METRO_PASSWORD")
+        
+        password_input.clear()
+        password_input.send_keys(password)  # type: ignore
+        print("Entered password")
+        
+        # Click sign in button
+        signin_btn = wait.until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        signin_btn.click()
+        print("Clicked sign in button")
+        
+        # Handle "Stay signed in?" dialog if it appears
+        try:
+            stay_signed_in = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, 'idSIButton9'))
+            )
+            stay_signed_in.click()
+            print("Clicked 'Stay signed in' button")
+        except TimeoutException:
+            print("No 'Stay signed in' dialog found, continuing...")
+            
+    except TimeoutException as e:
+        print(f'Login timeout error: {e}')
+        print(f'Current page source: {driver.page_source[:500]}...')
+        teardown(driver)
+        raise
+    except Exception as e:
+        print(f'Login error: {e}')
+        print(f'Current page source: {driver.page_source[:500]}...')
+        teardown(driver)
+        raise
     
-    print('post log in')
+    print('Post login successful')
+    print(f'Current URL: {driver.current_url}')
     print(driver.find_element(By.XPATH, "/html/body").text)
     
     return driver
@@ -132,13 +181,21 @@ def screenshot_bi(driver) -> list:
 
     # Open the dashboard in fullscreen
     try:
-        view_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="app-bar-view-menu-btn"]')))
+        print("Looking for view menu button...")
+        view_btn = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@data-testid="app-bar-view-menu-btn"]')))
         view_btn.click()
+        print("Clicked view menu button")
 
-        fullscreen_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="open-in-full-screen-btn"]')))
+        print("Looking for fullscreen button...")
+        fullscreen_btn = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@data-testid="open-in-full-screen-btn"]')))
         fullscreen_btn.click()
-    except:
-        teardown(driver)
+        print("Clicked fullscreen button")
+    except TimeoutException as e:
+        print(f"Timeout waiting for fullscreen elements: {e}")
+        print("Attempting to take screenshots without fullscreen...")
+    except Exception as e:
+        print(f"Error opening fullscreen: {e}")
+        print("Attempting to take screenshots without fullscreen...")
     
     # Wait for the report to fullscreen
     time.sleep(5)
@@ -146,18 +203,33 @@ def screenshot_bi(driver) -> list:
 
     # Take screenshots of the first 3 pages of the dashboard
     try:
-        next_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@data-testid="fullscreen-navigate-next-btn"]')))
+        print("Looking for navigation buttons...")
+        next_btn = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@data-testid="fullscreen-navigate-next-btn"]')))
+        print("Taking screenshot of page 1...")
         driver.save_screenshot(img_filepaths[0])
+        print(f"Saved screenshot to: {img_filepaths[0]}")
 
+        print("Navigating to page 2...")
         next_btn.click()
-        time.sleep(3)
+        time.sleep(5)  # Increased wait time for CI
+        print("Taking screenshot of page 2...")
         driver.save_screenshot(img_filepaths[1])
+        print(f"Saved screenshot to: {img_filepaths[1]}")
 
+        print("Navigating to page 3...")
         next_btn.click()
-        time.sleep(3)
+        time.sleep(5)  # Increased wait time for CI
+        print("Taking screenshot of page 3...")
         driver.save_screenshot(img_filepaths[2])
-    except:
-        teardown(driver)
+        print(f"Saved screenshot to: {img_filepaths[2]}")
+    except TimeoutException as e:
+        print(f"Timeout waiting for navigation elements: {e}")
+        print("Taking single screenshot of current page...")
+        driver.save_screenshot(img_filepaths[0])
+    except Exception as e:
+        print(f"Error taking screenshots: {e}")
+        print("Taking single screenshot of current page...")
+        driver.save_screenshot(img_filepaths[0])
 
     teardown(driver)
     return img_filepaths
@@ -195,6 +267,6 @@ def create_all_reports() -> None:
     """
 
     user = os.getenv("METRO_EMAIL")
-    driver = powerbi_login(user) 
+    driver = powerbi_login(user)  # type: ignore 
     image_filepaths = screenshot_bi(driver)
     save_reports(image_filepaths)
