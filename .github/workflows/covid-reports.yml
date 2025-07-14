@@ -1,9 +1,6 @@
 name: COVID Reports Automation
 
 on:
-  schedule:
-    # Run daily at 8 AM UTC
-    - cron: '0 8 * * *'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
